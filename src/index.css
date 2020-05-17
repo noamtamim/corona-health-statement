@@ -1,0 +1,27 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: Alef;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.section {
+  max-width: 575px;
+  padding: 10px;
+}
+
+.container {
+  background-color: #ffffff;
+}
+
+@font-face {
+  font-family: 'Alef';
+  src: local('Alef'), url(./fonts/Alef-Regular.ttf) format('truetype');
+}
