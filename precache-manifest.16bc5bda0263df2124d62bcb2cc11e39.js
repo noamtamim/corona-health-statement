@@ -1,23 +1,23 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "42dee9f229da59c5bdcf65a73e36ff51",
+    "revision": "522987429c77d42b5cff974dfd22aad1",
     "url": "/corona-health-statement/index.html"
   },
   {
-    "revision": "6c730115e03175ed00ea",
-    "url": "/corona-health-statement/static/css/main.c8cd111e.chunk.css"
+    "revision": "d33afed13c5e023b0de1",
+    "url": "/corona-health-statement/static/css/main.d69ebb92.chunk.css"
   },
   {
-    "revision": "23997a0f4ea430673e32",
-    "url": "/corona-health-statement/static/js/2.a9f9753f.chunk.js"
+    "revision": "9d57ef85a7b331dc8e98",
+    "url": "/corona-health-statement/static/js/2.5c80c2d9.chunk.js"
   },
   {
     "revision": "007759a014f21610fb7b6978e6999008",
-    "url": "/corona-health-statement/static/js/2.a9f9753f.chunk.js.LICENSE.txt"
+    "url": "/corona-health-statement/static/js/2.5c80c2d9.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "6c730115e03175ed00ea",
-    "url": "/corona-health-statement/static/js/main.4834b433.chunk.js"
+    "revision": "d33afed13c5e023b0de1",
+    "url": "/corona-health-statement/static/js/main.6871a680.chunk.js"
   },
   {
     "revision": "addd876ab13d5fe2f4fa",
