@@ -8,37 +8,19 @@ import {
 } from 'react-bootstrap-icons';
 import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
 import htmlToImage from 'html-to-image';
+import html2canvas from 'html2canvas';
 import is from 'is_js';
 
-class App extends PureComponent {
-
-  componentDidMount() {
-    if (is.safari()) {
-      alert("התגלה דפדפן ספארי. אנא שלח את העמוד להדפסה ובחר באפשרות שמירה כ-PDF")
-    }
-  }
-
-  handleSaveBeta() {
-    const node = document.getElementById('toSave');
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        key: '',
-        source: node,
-        type: 'png',
-        width: node.offsetWidth,
-        height: node.offsetHeight,
-        quality: '100',
-        zoom: '1',
-      })
-    };
-    fetch('https://www.html2image.net/api/api.php', requestOptions)
-        .then(response => response.json())
-        .then(data => console.log(data));
-  }
-
-  handleSave() {
+function handleSave() {
+  if (is.safari()) {
+    html2canvas(document.body).then((canvas) => {
+      const dataUrl = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = dataUrl;
+      a.download = 'Statement.png';
+      a.click();
+    });
+  } else {
     const node = document.getElementById('toSave');
     htmlToImage.toPng(node)
       .then((dataUrl) => {
@@ -51,89 +33,16 @@ class App extends PureComponent {
         console.error('oops, something went wrong!', error);
       });
   }
+}
+
+class App extends PureComponent {
+  constructor() {
+    super();
+    this.handleClear = this.handleClear.bind(this);
+  }
 
   handleClear() {
     this.signaturePad.instance.clear();
-  }
-
-  renderTitle() {
-    return (
-      <div className="columns">
-        <div className="column" style={{ display: 'flex', justifyContent: 'center' }}>
-          <h1 className="title" style={{ marginBottom: 20 }}>
-            <PencilSquare />
-            {' '}
-            הצהרת בריאות
-          </h1>
-        </div>
-      </div>
-    );
-  }
-
-  renderForm() {
-    return (
-      <div>
-        <Form>
-          <Form.Group as={Row} controlId="frmChildName">
-            <Col>
-              <Form.Label>שם התלמיד/ה</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: פלוני אלמוני" />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="frmChildID">
-            <Col>
-              <Form.Label>מס׳ תעודת זהות</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: 301234567" />
-            </Col>
-          </Form.Group>
-          <Row>
-            <Col>
-              <span style={{ textDecorationLine: 'underline', fontWeight: 'bold' }}>אני (החתום מטה) מצהיר כי:</span>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <CheckCircle />
-              {' '}
-              מדדתי חום לילד/תי ונמצא כי חום גופו/ה מתחת ל-38 מעלות צלזיוס
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <CheckCircle />
-              {' '}
-              ילד/תי לא משתעל/ת ואין לו/לה קשיים בנשימה*
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <CheckCircle />
-              {' '}
-              למיטב ידיעתי ילד/תי לא היה/הייתה במגע קרוב עם חולה קורונה בשבועיים האחרונים
-            </Col>
-          </Row>
-
-          <Form.Group style={{ marginTop: 20 }} as={Row} controlId="frmParentName">
-            <Col>
-              <Form.Label>שם ההורה</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: אבא של פלוני" />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="frmParentId">
-            <Col>
-              <Form.Label>מס׳ תעודת זהות</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: 301234567" />
-            </Col>
-          </Form.Group>
-          <Form.Group as={Row} controlId="frmDate">
-            <Col>
-              <Form.Label>תאריך</Form.Label>
-              <Form.Control type="text" defaultValue={new Date().toLocaleDateString('he')} />
-            </Col>
-          </Form.Group>
-        </Form>
-      </div>
-    );
   }
 
   renderSignaturePad() {
@@ -160,32 +69,20 @@ class App extends PureComponent {
     );
   }
 
-  renderClarifications() {
-    return (
-      <div className="columns">
-        <div className="column">
-          <span>* למעט שיעול או קושי בנשימה הנובע ממצב כרוני כגון אסטמה או אלרגיה אחרת</span>
-        </div>
-      </div>
-    );
-  }
-
   renderSave() {
     return (
       <div className="columns" style={{ marginTop: 20, marginBottom: 20 }}>
         <div className="column" style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button variant="outline-dark" onClick={this.handleClear.bind(this)}>
+          <Button variant="outline-dark" onClick={this.handleClear}>
             <X />
             {' '}
             נקה חתימה
           </Button>
-          {!is.safari() ?
-          <Button variant="dark" onClick={this.handleSave.bind(this)}>
+          <Button variant="dark" onClick={() => handleSave()}>
             <Check />
             {' '}
             שמור כתמונה לשיתוף
           </Button>
-          : null}
         </div>
       </div>
     );
@@ -200,10 +97,82 @@ class App extends PureComponent {
         >
           <section className="section">
             <div className="container" id="toSave">
-              {this.renderTitle()}
-              {this.renderForm()}
+              <div className="columns">
+                <div className="column" style={{ display: 'flex', justifyContent: 'center' }}>
+                  <h1 className="title" style={{ marginBottom: 20 }}>
+                    <PencilSquare />
+                    {' '}
+                    הצהרת בריאות
+                  </h1>
+                </div>
+              </div>
+              <div>
+                <Form>
+                  <Form.Group as={Row} controlId="frmChildName">
+                    <Col>
+                      <Form.Label>שם התלמיד/ה</Form.Label>
+                      <Form.Control type="text" placeholder="לדוגמא: פלוני אלמוני" />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} controlId="frmChildID">
+                    <Col>
+                      <Form.Label>מס׳ תעודת זהות</Form.Label>
+                      <Form.Control type="text" placeholder="לדוגמא: 301234567" />
+                    </Col>
+                  </Form.Group>
+                  <Row>
+                    <Col>
+                      <span style={{ textDecorationLine: 'underline', fontWeight: 'bold' }}>אני (החתום מטה) מצהיר כי:</span>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <CheckCircle />
+                      {' '}
+                      מדדתי חום לילד/תי ונמצא כי חום גופו/ה מתחת ל-38 מעלות צלזיוס
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <CheckCircle />
+                      {' '}
+                      ילד/תי לא משתעל/ת ואין לו/לה קשיים בנשימה*
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col>
+                      <CheckCircle />
+                      {' '}
+                      למיטב ידיעתי ילד/תי לא היה/הייתה במגע קרוב עם חולה קורונה בשבועיים האחרונים
+                    </Col>
+                  </Row>
+
+                  <Form.Group style={{ marginTop: 20 }} as={Row} controlId="frmParentName">
+                    <Col>
+                      <Form.Label>שם ההורה</Form.Label>
+                      <Form.Control type="text" placeholder="לדוגמא: אבא של פלוני" />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} controlId="frmParentId">
+                    <Col>
+                      <Form.Label>מס׳ תעודת זהות</Form.Label>
+                      <Form.Control type="text" placeholder="לדוגמא: 301234567" />
+                    </Col>
+                  </Form.Group>
+                  <Form.Group as={Row} controlId="frmDate">
+                    <Col>
+                      <Form.Label>תאריך</Form.Label>
+                      <Form.Control type="text" defaultValue={new Date().toLocaleDateString('he')} />
+                    </Col>
+                  </Form.Group>
+                </Form>
+              </div>
               {this.renderSignaturePad()}
-              {this.renderClarifications()}
+              <div className="columns">
+                <div className="column">
+                  <span>* למעט שיעול או קושי בנשימה הנובע ממצב כרוני כגון אסטמה או אלרגיה אחרת</span>
+                </div>
+              </div>
             </div>
             <div className="container">
               {this.renderSave()}
