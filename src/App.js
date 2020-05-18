@@ -8,8 +8,36 @@ import {
 } from 'react-bootstrap-icons';
 import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
 import htmlToImage from 'html-to-image';
+import is from 'is_js';
 
 class App extends PureComponent {
+
+  componentDidMount() {
+    if (is.safari()) {
+      alert("התגלה דפדפן ספארי. אנא שלח את העמוד להדפסה ובחר באפשרות שמירה כ-PDF")
+    }
+  }
+
+  handleSaveBeta() {
+    const node = document.getElementById('toSave');
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        key: '',
+        source: node,
+        type: 'png',
+        width: node.offsetWidth,
+        height: node.offsetHeight,
+        quality: '100',
+        zoom: '1',
+      })
+    };
+    fetch('https://www.html2image.net/api/api.php', requestOptions)
+        .then(response => response.json())
+        .then(data => console.log(data));
+  }
+
   handleSave() {
     const node = document.getElementById('toSave');
     htmlToImage.toPng(node)
@@ -151,11 +179,13 @@ class App extends PureComponent {
             {' '}
             נקה חתימה
           </Button>
+          {!is.safari() ?
           <Button variant="dark" onClick={this.handleSave.bind(this)}>
             <Check />
             {' '}
             שמור כתמונה לשיתוף
           </Button>
+          : null}
         </div>
       </div>
     );
