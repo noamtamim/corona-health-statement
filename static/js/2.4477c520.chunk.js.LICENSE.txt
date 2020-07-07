@@ -28,6 +28,11 @@ object-assign
  *
  */
 
+/*!
+ * is.js 0.8.0
+ * Author: Aras Atasaygin
+ */
+
 /** @license React v0.19.1
  * scheduler.production.min.js
  *
