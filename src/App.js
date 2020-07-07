@@ -9,6 +9,7 @@ import {
 import DirectionProvider, { DIRECTIONS } from 'react-with-direction/dist/DirectionProvider';
 import htmlToImage from 'html-to-image';
 import is from 'is_js';
+import * as qs from 'query-string';
 
 class App extends PureComponent {
 
@@ -71,19 +72,20 @@ class App extends PureComponent {
   }
 
   renderForm() {
+    const query = qs.parse(window.location.search);
     return (
       <div>
         <Form>
           <Form.Group as={Row} controlId="frmChildName">
             <Col>
               <Form.Label>שם התלמיד/ה</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: פלוני אלמוני" />
+              <Form.Control type="text" placeholder="לדוגמא: פלוני אלמוני" value={query.childName} />
             </Col>
           </Form.Group>
           <Form.Group as={Row} controlId="frmChildID">
             <Col>
               <Form.Label>מס׳ תעודת זהות</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: 301234567" />
+              <Form.Control type="text" placeholder="לדוגמא: 301234567" value={query.childId} />
             </Col>
           </Form.Group>
           <Row>
@@ -116,13 +118,13 @@ class App extends PureComponent {
           <Form.Group style={{ marginTop: 20 }} as={Row} controlId="frmParentName">
             <Col>
               <Form.Label>שם ההורה</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: אבא של פלוני" />
+              <Form.Control type="text" placeholder="לדוגמא: אבא של פלוני" value={query.parentName} />
             </Col>
           </Form.Group>
           <Form.Group as={Row} controlId="frmParentId">
             <Col>
               <Form.Label>מס׳ תעודת זהות</Form.Label>
-              <Form.Control type="text" placeholder="לדוגמא: 301234567" />
+              <Form.Control type="text" placeholder="לדוגמא: 301234567" value={query.parentId} />
             </Col>
           </Form.Group>
           <Form.Group as={Row} controlId="frmDate">
