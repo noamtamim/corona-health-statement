@@ -1,0 +1,42 @@
+version: 2
+jobs:
+  deploy:
+    environment:
+      USER_NAME: circleci
+      USER_EMAIL: deployer@circleci.com
+    docker:
+      - image: circleci/node:12.18
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "55:77:41:bc:c7:ff:d6:6a:63:73:2c:e7:b7:77:9b:6e"
+      - checkout
+      - run:
+          name: config git user
+          command: git config user.email $USER_EMAIL && git config user.name $USER_NAME
+      - run:
+          name: install yarn
+          command: curl -o- -L https://yarnpkg.com/install.sh | bash
+      - restore_cache:
+          keys:
+            - yarn-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-cache-v1-{{ arch }}-{{ .Branch }}
+            - yarn-cache-v1
+      - run:
+          name: install npm dependencies
+          command: yarn install --immutable
+      - save_cache:
+          key: yarn-cache-v1-{{ arch }}-{{ .Branch }}-{{ checksum "yarn.lock" }}
+          paths:
+            - ~/.cache/yarn
+      - run:
+          name: deploy
+          command: npm run deploy
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - deploy:
+          filters:
+            branches:
+              only: master
